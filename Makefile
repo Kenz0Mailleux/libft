@@ -1,96 +1,43 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: kmailleu <kmailleu@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/11/09 14:09:22 by kmailleu          #+#    #+#              #
-#    Updated: 2023/12/06 17:51:51 by kmailleu         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+NAME = libfinal.a
 
-LIBC =	ft_isalpha.c \
-		ft_isdigit.c \
-		ft_isalnum.c \
-		ft_isascii.c \
-		ft_isprint.c \
-		ft_strlen.c \
-		ft_strlcat.c \
-		ft_strlcpy.c \
-		ft_tolower.c \
-		ft_toupper.c \
-		ft_memset.c \
-		ft_strdup.c \
-		ft_bzero.c \
-		ft_memcpy.c \
-		ft_calloc.c \
-		ft_putchar_fd.c \
-		ft_putstr_fd.c \
-		ft_putendl_fd.c \
-		ft_putnbr_fd.c \
-		ft_itoa.c \
-		ft_strmapi.c \
-		ft_substr.c \
-		ft_strchr.c \
-		ft_memmove.c \
-		ft_atoi.c \
-		ft_strjoin.c \
-		ft_strrchr.c \
-		ft_strncmp.c \
-		ft_memchr.c \
-		ft_strnstr.c \
-		ft_memcmp.c \
-		ft_strtrim.c \
-		ft_striteri.c \
-		ft_split.c \
+MODULE1_DIR = original
+MODULE2_DIR = printf
+MODULE3_DIR = gnl
 
-BONUS =	ft_lstnew_bonus.c \
-		ft_lstadd_front_bonus.c \
-		ft_lstsize_bonus.c \
-		ft_lstlast_bonus.c \
-		ft_lstadd_back_bonus.c \
-		ft_lstdelone_bonus.c \
-		ft_lstclear_bonus.c \
-		ft_lstiter_bonus.c \
-		ft_lstmap_bonus.c \
-		
-		
-	
+MODULE1_LIB = $(MODULE1_DIR)/libft.a
+MODULE2_LIB = $(MODULE2_DIR)/libftprintf.a
+MODULE3_LIB = $(MODULE3_DIR)/lbftgnl.a
 
-SRCS = ${LIBC}
+LIBS = $(MODULE1_LIB) $(MODULE2_LIB) $(MODULE3_LIB)
 
-SRCSALL = ${LIBC} ${BONUS}
+all: $(NAME)
 
-OBJS = ${SRCS:.c=.o}
+$(NAME): $(LIBS)
+	@ar rcs $(NAME) $(LIBS) > /dev/null 2>&1
+	@echo "Final library created: $(NAME)"
 
-OBJSALL = ${SRCSALL:.c=.o} 
+$(MODULE1_LIB):
+	@$(MAKE) -C $(MODULE1_DIR) > /dev/null 2>&1
 
-NAME = libft.a
+$(MODULE2_LIB):
+	@$(MAKE) -C $(MODULE2_DIR) > /dev/null 2>&1
 
-CC = cc
+$(MODULE3_LIB):
+	@$(MAKE) -C $(MODULE3_DIR) > /dev/null 2>&1
 
-CFLAGS = -Wall -Werror -Wextra
+clean:
+	@$(MAKE) -C $(MODULE1_DIR) clean > /dev/null 2>&1
+	@$(MAKE) -C $(MODULE2_DIR) clean > /dev/null 2>&1
+	@$(MAKE) -C $(MODULE3_DIR) clean > /dev/null 2>&1
+	@echo "Cleaned object files from all modules"
 
-all: 	${NAME}
+fclean: clean
+	@$(MAKE) -C $(MODULE1_DIR) fclean > /dev/null 2>&1
+	@$(MAKE) -C $(MODULE2_DIR) fclean > /dev/null 2>&1
+	@$(MAKE) -C $(MODULE3_DIR) fclean > /dev/null 2>&1
+	@rm -f $(NAME)
+	@echo "Cleaned all libraries"
 
-.c.o:
-		@${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
+re: fclean all
 
-${NAME}:	libft.h ${OBJS}
-		@ar -rsc ${NAME} ${OBJS}
-
-
-bonus:	libft.h ${OBJSALL}
-		@ar -rsc ${NAME} ${OBJSALL}
-
-
-clean:	
-		@rm -f ${OBJSALL}
-
-fclean:	clean;
-		@rm -f ${NAME}
-
-re:	fclean all
-
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re
